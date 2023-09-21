@@ -1,0 +1,517 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: whitesmoke;
+  }
+  
+  /*Custom Scrollbar*/
+  ::-webkit-scrollbar {
+    width: 13px;
+  }
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #394870;
+  }
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #19233b;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #141927;
+  }
+  
+  .music-player-page {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .music-container {
+    position: relative;
+    height: 70%;
+    width: 40%;
+    border: 1px solid transparent;
+    background-color: rgba(81, 84, 88, 0.267);
+    padding-bottom: 30px;
+    background-size: 100%;
+    border-radius: 15px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
+      rgba(0, 0, 0, 0.22) 0px 15px 12px;
+  }
+  .top-container {
+    display: flex;
+    height: 60%;
+    width: 100%;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .bottom-container{
+    top: 100%;
+  }
+  
+  .track-art {
+    border-radius: 15px 15px 0 0;
+    margin: 0 0 0 0;
+    height: 300px;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    
+  }
+  .now-playing {
+    font-size: 1rem;
+  }
+  
+  .music-info{
+    text-align: center;
+    top: 45%;
+    right: 0;
+    width: 100%;
+    padding: .25rem 0 0 0;
+    opacity: 1;
+    transform: translateY(0%);
+    transition: transform 0.3s ease-in, opacity 0.3s ease-in;
+    z-index: 0;
+  }
+  
+  .music-info .track-name {
+    margin: 0;
+  }
+  
+  /* .top-c:hover .music-info,
+  .music-container:not(.paused) .music-info {
+    opacity: 1;
+    transform: translateY(-100%);
+  } */
+  
+  .track-name {
+    font-size: 1.5rem;
+  }
+  .track-artist {
+    font-size: 1rem;
+    right: 5rem
+  }
+  
+  
+  /* Volume Buttons */
+  .volume-container {
+    left: 5%;
+    display: flex;
+    position: absolute;
+    align-items: center;
+    cursor: pointer;
+    bottom: 1.5rem;
+  }
+  
+  
+  .mute-btn{
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    opacity: .85
+  }
+  
+  .mute-btn:hover {
+    opacity: 1;
+  }
+  
+  .volume-off,
+  .volume-down,
+  .volume-up {
+    color: #eeeae6;
+    display: none;
+  }
+  
+  /*Display volume button according to volume state*/
+  .music-container[data-volume-level="high"] .volume-up {
+    display: block;
+  }
+  
+  .music-container[data-volume-level="low"] .volume-down {
+    display: block;
+  }
+  
+  .music-container[data-volume-level="muted"] .volume-off {
+    display: block;
+  }
+  .duration-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  }
+  
+  /* Timeline Container */
+  .timeline-container {
+    height: .38rem;
+    cursor: pointer;
+    width: 60%;
+    min-width: 0;
+  }
+  
+  /* Time */
+  .current-time,
+  .total-time {
+    padding: 10px;
+  }
+  /* Time Slider */
+  .timeline {
+    background-color: rgba(100,100,100,.5);
+    margin-left: .5rem;
+    margin-right: .5rem;
+    /*Rounds Edges*/
+    border-radius: .5rem;
+    position: relative;
+  }
+  
+  /*Time Preview*/
+  .timeline::before {
+    content: "";
+    position: absolute;
+    /*Starts to the left*/
+    left: .2rem;
+    /*Fills full size of section*/
+    top: 0;
+    bottom: 0;
+    /*Right value is 100% - preview position x 100%*/
+    right: calc(100% - var(--preview-position) * 100%);
+    background-color: rgb(150,150,150);
+    /*Rounds Edges*/
+    border-radius: .4rem;
+    display: none;
+  } 
+  
+  /*Timeline Progress*/
+  .timeline::after {
+    content: "";
+    position: absolute;
+    /*Starts to the left*/
+    left: 0;
+    /*Fills full size of section*/
+    top: 0;
+    bottom: 0;
+    /*Right value is 100% - progress position x 100%*/
+    right: calc(100% - var(--progress-position) * 100%);
+    background-color: var(--background);
+    /*Rounds Edges*/
+    border-radius: .4rem;
+  }
+  
+  /*Timeline thumb indicator*/
+  .timeline .thumb-indicator {
+    --scale: 0;
+    position: absolute;
+    /*Center circle by half of its width*/
+    transform: translateX(-50%) scale(var(--scale));
+    /*Height twice the size of bar*/
+    height: 200%;
+    /*Keep in middle of bar*/
+    top: -50%;
+    /*Determines position. Progress position x 100%*/
+    left: calc(var(--progress-position) * 100%);
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 150ms ease-in-out;
+    aspect-ratio: 1 / 1;
+    z-index: 1;
+  }
+  
+  
+  .music-container.scrubbing .timeline::before,
+  .timeline-container:hover .timeline::before {
+    display: block;
+  }
+  
+  .music-container.scrubbing .thumb-indicator,
+  .timeline-container:hover .thumb-indicator {
+    --scale: 1;
+  }
+  
+  /*When scrubbing double in size*/
+  .music-container.scrubbing .timeline,
+  .timeline-container .timeline {
+    height: 100%;
+  }
+  
+  
+  /* Volume Slider */
+  .volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 30%;
+    /*Hide by default*/
+    background: rgba(100,100,100,.5);
+    cursor: pointer;
+    outline: none;
+    border: none;
+    /*Fade in from left to right*/
+    transform-origin: left;
+    /*From zero vertically*/
+    transform: scaleX(0);
+  }
+  
+  /*Volume Slider Inside Trail*/
+  .volume-slider::after {
+    content: "";
+    position: absolute;
+    /*Starts to the left*/
+    left: 0;
+    /*Fills full size of section*/
+    top: 0;
+    bottom: 0;
+    /*Right value is 100% - progress position x 100%*/
+    right: calc(100% - var(--volume-level) * 100%);
+    /* Variable to make bg color same as page */
+    background: var(--background);
+    /*Rounds Edges*/
+    border-radius: .4rem;
+  }
+  
+  /* Volume and Timeline Slider Thumb */
+  .timeline::-webkit-slider-thumb,
+  .volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    outline: none; 
+    background: #eeeae6;
+  }
+  
+  .volume-slider::-webkit-slider-thumb{
+    position: absolute;
+    height: 200%; 
+    border-radius: 50%;
+    /*Sets to middle*/
+    transform: translateY(-50%);
+    /*Sets position on slider*/
+    left: calc(var(--volume-level) * 96%);
+    aspect-ratio: 1/1;
+    z-index: 1;
+  }
+  
+  /* Volume Slider Appear on Hover */
+  .volume-container:hover .volume-slider,
+  .volume-slider:focus-within {
+    display: block;
+    height: 6px;
+    transform: scaleX(1);
+    transition: width 300ms ease-in-out, transform 300ms ease-in-out;
+  }
+  
+  /*Button Controls*/
+  .button-container {
+    /* transform: translateY(15%); */
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .button-container button{
+    background: none;
+    border:none;
+    padding: 0;
+    /* height: 1.5rem; */
+    width: 17%;
+    font-size: 1.1rem;
+  }
+  .active {
+    color: black;
+  }
+  
+  
+  
+  /* Buttons */
+  .replay-btn,
+  .shuffle-btn,
+  .play-pause-btn,
+  .prev-btn,
+  .next-btn {
+    display: flex;
+    color: #eeeae6;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    opacity: 0.85;
+    transition: opacity 0.3s;
+  }
+  .replay-btn:hover,
+  .shuffle-btn:hover,
+  .play-pause-btn:hover,
+  .prev-btn:hover,
+  .next-btn:hover {
+    opacity: 1;
+  }
+  
+  
+  /*Play/Pause*/
+  .play-pause-btn .material-icons {
+    font-size: 5rem;
+  }
+  
+  /*If video is paused, hide pause button*/
+  .music-container.paused .pause {
+    display: none;
+  }
+  
+  /*If video is NOT paused, hide play button*/
+  .music-container:not(.paused) .play {
+    display: none;
+  }
+  
+  /* Shuffle Button */
+  .shuffle-btn{
+    opacity: 0;
+    transform: scaleX(0);
+    transform: translateX(180%);
+    transition: all;
+  }
+  .button-container:hover .shuffle-btn{
+    opacity: 1;
+    transform: scaleX(1);
+    transition: width 300ms ease-in-out, transform 300ms ease-in-out;
+  }
+  .shuffle-active {
+    color: black;
+  }
+  
+  /* Previous Button */
+  .prev-btn{
+    opacity: 0;
+    transform: scaleX(0);
+    transform: translateX(100%);
+    transition: all;
+  }
+  .button-container:hover .prev-btn{
+    opacity: 1;
+    transform: scaleX(1);
+    transition: width 300ms ease-in-out, transform 300ms ease-in-out;
+  }
+  
+  /* Next Button */
+  .next-btn{
+    opacity: 0;
+    transform: scaleX(0);
+    transform: translateX(-100%);
+    transition: all;
+  }
+  .button-container:hover .next-btn{
+    opacity: 1;
+    transform: scaleX(1);
+    transition: width 300ms ease-in-out, transform 300ms ease-in-out;
+  }
+  
+  /* Replay Button */
+  .replay-btn{
+    opacity: 0;
+    transform: scaleX(0);
+    transform: translateX(-189%);
+    transition: all;
+  }
+  .button-container:hover .replay-btn{
+  opacity: 1;
+  transform: scaleX(1);
+  transition: width 300ms ease-in-out, transform 300ms ease-in-out;
+  }
+  
+  /* Menu Button */
+  .menu-btn{
+    right: 5%;
+    display: flex;
+    position: absolute;
+    align-items: center;
+    bottom: 1.5rem;
+    cursor: pointer;
+    opacity: .85
+  }
+  
+  .menu-btn:hover{
+    opacity: 1;
+  }
+  
+  
+  
+  /* .rotate {
+    animation: rotation 8s infinite linear;
+  }
+  @keyframes rotation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(359deg);
+    }
+  }
+  .loader {
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .loader .stroke {
+    background: #f1f1f1;
+    height: 150%;
+    width: 10px;
+    border-radius: 50px;
+    margin: 0px 5px;
+    animation: animate 1.4s linear infinite;
+  }
+  @keyframes animate {
+    50% {
+      height: 20%;
+      background: #4286f4;
+    }
+    100% {
+      height: 100%;
+    }
+  }
+  .stroke:nth-child(1) {
+    animation-delay: 0s;
+  }
+  .stroke:nth-child(2) {
+    animation-delay: 0.3s;
+  }
+  .stroke:nth-child(3) {
+    animation-delay: 0.6s;
+  }
+  .stroke:nth-child(4) {
+    animation-delay: 0.9s;
+  }
+  .stroke:nth-child(5) {
+    animation-delay: 0.6s;
+  }
+  .stroke:nth-child(6) {
+    animation-delay: 0.3s;
+  }
+  .stroke:nth-child(7) {
+    animation-delay: 0s;
+  } */
+  
+  @media screen and (max-width:1024px){
+    .music-container{
+      width: 45%;
+    }
+    .button-container button{
+      width: 17%;
+    }
+  }
+  @media screen and (max-width:825px){
+    .button-container button{
+      width: 20%;
+    }
+  }
+  @media screen and (max-width:680px){
+    .music-container{
+      width: 50%;
+    }
+    
+  }
+  @media screen and (max-width:425px){
+    .music-container{
+      width: 55%;
+    }
+    
+  }

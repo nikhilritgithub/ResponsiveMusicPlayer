@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="">
+    <meta name="apple-mobile-web-app-title" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0
+      shrink-to-fit=no user-scalable=no" />
+      <!-- Font Awesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <!--Google Material Icons-->  
+    <link 
+      rel="stylesheet"    
+      href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Round"/>
+  <!--Google Material Icons-->  
+    <link 
+      rel="stylesheet" 
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+      <title>Music Player</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <div class="music-player-page">
+      <div class="music-container paused" data-volume-level="high">
+
+        <audio preload="metadata">
+          <source src="music/audio.mp3" type="music/mp3">
+        </audio>
+
+        <div class="top-container">
+          <div class="track-art"></div>
+        </div>
+        
+        
+        <div class="bottom-container">
+          <div class="music-info">
+            <div class="track-name">Track Name</div>
+            <div class="track-artist">Track Artist</div>
+          </div>
+          <div class="duration-container">
+            <div class="current-time">00:00</div>
+          <div class="timeline-container">
+            <div class="timeline">
+              <div class="thumb-indicator"></div>
+            </div>
+          </div>
+          <div class="total-time">00:00</div>
+          </div>
+
+          <!-- Volume Button -->
+          <div class="volume-container">
+            <button class="mute-btn">
+              <span class="material-icons volume-off">volume_off</span>
+              <span class="material-icons volume-down">volume_down</span>
+              <span class="material-icons volume-up">volume_up</span>
+            </button>
+            <input
+              class="volume-slider"
+              type="range"
+              min="0"
+              max="1"
+              value="100"
+              step="any"
+              style="--volume-level:1"
+            />
+          </div>
+
+          <div class="button-container">
+            <button class="shuffle-btn" title="Shuffle" onclick="shuffleTrack()">
+              <span class="material-icons">shuffle</span>
+            </button>
+            <button class="prev-btn" title="Prev" onclick="prevTrack()">
+              <span class="material-icons">skip_previous</span>
+            </button>
+            <button class="play-pause-btn" title="Play">
+              <span class="material-icons play">play_circle</span>
+              <span class="material-icons pause">pause_circle</span>
+            </button>
+            <button class="next-btn" title="Next" onclick="nextTrack()">
+              <span class="material-icons">skip_next</span>
+            </button>
+            <button class="replay-btn" title="Replay"onclick="repeatTrack()">
+              <span class="material-icons">replay</span>
+            </button>
+          </div>
+        
+          <div class="menu-btn">
+            <span class="material-icons">more_vert</span>
+          </div>
+        </div>
+      
+      </div>
+    </div>
+    <script src="script.js">
+      
+    </script>
+  </body>
+</html>
